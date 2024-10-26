@@ -5,8 +5,9 @@ bank_marketing_analysis:
     ci:
       type: bigquery
       method: service-account
-      project: ${GCP_PROJECT_ID}
-      dataset: ${DBT_DATASET}
+      keyfile: "{{ env_var('DBT_GOOGLE_KEYFILE') }}"
+      project: "{{ env_var('DBT_GOOGLE_PROJECT') }}"
+      dataset: "{{ env_var('DBT_GOOGLE_DATASET') }}"
       threads: 1
       timeout_seconds: 300
       location: US

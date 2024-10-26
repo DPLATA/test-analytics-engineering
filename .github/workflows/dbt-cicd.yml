@@ -3,32 +3,41 @@ name: dbt CI/CD Pipeline
 
 on:
   push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
+    branches: [main]
 
 env:
-  DBT_PROFILES_DIR: ~/.dbt
+  DBT_PROFILES_DIR: ./
   DBT_PROJECT_DIR: ./bank_marketing_analysis
+  DBT_GOOGLE_PROJECT: ${{ vars.DBT_GOOGLE_PROJECT }}
+  DBT_GOOGLE_DATASET: ${{ vars.DBT_GOOGLE_DATASET }}
+  DBT_GOOGLE_KEYFILE: /tmp/google/google-service-account.json
+
+  KEYFILE_CONTENTS: ${{secrets.KEYFILE_CONTENTS}}
 
 jobs:
-  dbt-code-validation:
+  build:
+    name: install and build dbt
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      # Prep Google keyfile
+      - run: mkdir -p "$(dirname $DBT_GOOGLE_KEYFILE)"
+      - run: echo "$KEYFILE_CONTENTS" > $DBT_GOOGLE_KEYFILE
+
+      - name: Install Python 3.9
+        uses: actions/setup-python@v2
         with:
-          python-version: '3.9'
+          python-version: 3.9.16
 
-      - name: Install dependencies
-        run: |
-          pip install dbt-core dbt-bigquery sqlfluff sqlfluff-templater-dbt pre-commit
+      - name: Checkout Repo
+        uses: actions/checkout@master
 
-      - name: Setup CI environment
+      - name: Install dbt
         run: |
-          mkdir -p ~/.dbt
-          cp profiles.yml ~/.dbt/profiles.yml
+          pip install dbt-bigquery
           dbt deps
-          dbt debug
+          dbt --version
+
+      - name: Run dbt
+        run: dbt build
