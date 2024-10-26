@@ -19,7 +19,7 @@ El objetivo es evaluar el dominio de la herramienta DBT (Data Build Tool) del ca
 1. **Configuración del Proyecto DBT:**
     - Crea un nuevo proyecto de DBT.
     - Conéctalo a BigQuery. Asegúrate de configurar correctamente las credenciales y el dataset de destino.
-    
+
 2. **Obtención de Datos:**
     - Descarga los datos del [Bank Marketing dataset](https://archive.ics.uci.edu/dataset/222/bank+marketing).
     - Carga los datos en una tabla en BigQuery llamada `raw_bank_marketing`.
@@ -29,18 +29,18 @@ El objetivo es evaluar el dominio de la herramienta DBT (Data Build Tool) del ca
         - Limpiar y normalizar los datos.
         - Filtrar registros irrelevantes.
         - Crear nuevas columnas necesarias para el análisis.
-        
+
     - Crea un modelo `kpi_bank_marketing.sql` para agregar los KPIs de marketing utilizando CTEs. Este modelo debe calcular:
         - Tasa de conversión: porcentaje de contactos exitosos sobre el total de contactos.
         - Número de contactos exitosos: total de conversiones logradas.
         - Segmentación de clientes: clasificación de clientes basada en criterios relevantes como edad, ocupación, etc.
-       
+
 4. **Pruebas Unitarias:**
     - Agrega pruebas unitarias en el archivo `schema.yml` para asegurar la integridad de los datos. Incluye pruebas para:
         - Validar tipos de datos.
         - Comprobar valores nulos.
         - Verificar rangos y unicidad de campos clave.
-    
+
 5. **Despliegue y Calidad:**
     - Configura un pipeline CI/CD para desplegar los modelos DBT usando herramientas como GitHub Actions o GitLab CI. Asegúrate de incluir pasos para:
         - Validación de código.
@@ -63,6 +63,6 @@ El objetivo es evaluar el dominio de la herramienta DBT (Data Build Tool) del ca
 - **Implementación de pruebas unitarias:** ¿Las pruebas unitarias son exhaustivas y cubren los casos relevantes?
 - **Despliegue y automatización:** ¿El pipeline CI/CD está correctamente configurado y automatiza el proceso de despliegue y pruebas?
 
-¡Suerte a todos! 
+¡Suerte a todos!
 
 ---

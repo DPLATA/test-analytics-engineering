@@ -14,10 +14,12 @@ SELECT
     occupation,
     contact_type,
     contact_month,
-    COUNT(*) as total_contacts,
-    COUNTIF(is_subscribed) as successful_conversions,  -- Changed from COUNT(CASE WHEN...)
-    AVG(call_duration_seconds) as avg_call_duration,
-    MAX(campaign_contacts) as max_campaign_contacts,
-    ROUND(SAFE_DIVIDE(COUNTIF(is_subscribed) * 100.0, NULLIF(COUNT(*), 0)), 2) as conversion_rate
+    COUNT(*) AS total_contacts,
+    -- Changed from COUNT(CASE WHEN...)
+    COUNTIF(is_subscribed) AS successful_conversions,
+    AVG(call_duration_seconds) AS avg_call_duration,
+    MAX(campaign_contacts) AS max_campaign_contacts,
+    ROUND(SAFE_DIVIDE(COUNTIF(is_subscribed) * 100.0, NULLIF(COUNT(*), 0)), 2)
+        AS conversion_rate
 FROM campaign_data
 GROUP BY 1, 2, 3

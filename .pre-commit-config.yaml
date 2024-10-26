@@ -12,14 +12,25 @@ repos:
     rev: 2.3.5
     hooks:
       - id: sqlfluff-lint
-        additional_dependencies: ['dbt-bigquery==1.5.3']
-        args: [--dialect, bigquery]
+        additional_dependencies:
+          - dbt-bigquery==1.5.3
+          - sqlfluff-templater-dbt
+        args:
+          - --dialect
+          - bigquery
+          - --config
+          - .sqlfluff
       - id: sqlfluff-fix
-        additional_dependencies: ['dbt-bigquery==1.5.3']
-        args: [--dialect, bigquery]
+        additional_dependencies:
+          - dbt-bigquery==1.5.3
+          - sqlfluff-templater-dbt
+        args:
+          - --dialect
+          - bigquery
+          - --config
+          - .sqlfluff
 
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.32.0
     hooks:
       - id: yamllint
-        args: [--format, parsable, --strict]

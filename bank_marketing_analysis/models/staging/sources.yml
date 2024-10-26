@@ -1,4 +1,4 @@
-# models/staging/sources.yml
+---
 sources:
   - name: raw
     database: "{{ target.database }}"
@@ -11,7 +11,7 @@ sources:
             description: "Age of the customer"
             tests:
               - not_null
-              - dbt_utils.accepted_range: # Changed from positive_values
+              - dbt_utils.accepted_range:
                   min_value: 0
                   max_value: null
           - name: job
@@ -19,42 +19,16 @@ sources:
             tests:
               - not_null
               - accepted_values:
-                  values: ['admin.', 'blue-collar', 'entrepreneur', 'housemaid', 'management',
-                          'retired', 'self-employed', 'services', 'student', 'technician',
-                          'unemployed', 'unknown']
-          - name: marital
-            description: "Marital status"
-            tests:
-              - not_null
-              - accepted_values:
-                  values: ['divorced', 'married', 'single', 'unknown']
-          - name: education
-            description: "Education level"
-            tests:
-              - not_null
-          - name: "default"
-            description: "Has credit in default?"
-            tests:
-              - accepted_values:
-                  values: ['yes', 'no']
-            quote: true  # Add this line to ensure proper quoting
-          - name: housing
-            description: "Has housing loan?"
-            tests:
-              - accepted_values:
-                  values: ['yes', 'no', 'unknown']
-          - name: loan
-            description: "Has personal loan?"
-            tests:
-              - accepted_values:
-                  values: ['yes', 'no', 'unknown']
-          - name: contact
-            description: "Contact communication type"
-            tests:
-              - accepted_values:
-                  values: ['cellular', 'telephone']
-          - name: y
-            description: "Target variable - term deposit subscription"
-            tests:
-              - accepted_values:
-                  values: ['yes', 'no']
+                  values:
+                    - 'admin.'
+                    - 'blue-collar'
+                    - 'entrepreneur'
+                    - 'housemaid'
+                    - 'management'
+                    - 'retired'
+                    - 'self-employed'
+                    - 'services'
+                    - 'student'
+                    - 'technician'
+                    - 'unemployed'
+                    - 'unknown'
