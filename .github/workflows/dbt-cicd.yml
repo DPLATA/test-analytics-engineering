@@ -29,17 +29,4 @@ jobs:
       - name: Setup CI environment
         run: |
           mkdir -p ~/.dbt
-          cat > ~/.dbt/profiles.yml << 'EOF'
-            bank_marketing_analysis:
-              target: ci
-              outputs:
-                ci:
-                  type: bigquery
-                  method: service-account
-                  project: ${{ secrets.GCP_PROJECT_ID }}
-                  dataset: ${{ secrets.DBT_DATASET }}
-                  threads: 1
-                  timeout_seconds: 300
-                  location: US
-                  priority: interactive
-            EOF
+          cp profiles.yml ~/.dbt/profiles.yml

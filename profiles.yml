@@ -1,0 +1,13 @@
+---
+bank_marketing_analysis:
+  target: ci
+  outputs:
+    ci:
+      type: bigquery
+      method: service-account
+      project: ${GCP_PROJECT_ID}
+      dataset: ${DBT_DATASET}
+      threads: 1
+      timeout_seconds: 300
+      location: US
+      priority: interactive
