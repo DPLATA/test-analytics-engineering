@@ -8,8 +8,8 @@ on:
     branches: [main, develop]
 
 env:
-  DBT_PROFILES_DIR: ./
-  DBT_PROJECT_DIR: ./
+  DBT_PROFILES_DIR: ~/.dbt
+  DBT_PROJECT_DIR: .
 
 jobs:
   dbt-code-validation:
@@ -26,9 +26,31 @@ jobs:
         run: |
           pip install dbt-core dbt-bigquery sqlfluff sqlfluff-templater-dbt pre-commit
 
+      - name: Setup DBT Profile
+        run: |
+          mkdir -p ~/.dbt
+                    cat > ~/.dbt/profiles.yml << EOF
+                    bank_marketing_analysis:
+                      target: prod
+                      outputs:
+                        prod:
+                          type: bigquery
+                          method: service-account
+                          project: ${{ secrets.GCP_PROJECT_ID }}
+                          dataset: ${{ secrets.DBT_DATASET }}
+                          threads: 4
+                          timeout_seconds: 300
+                          location: US
+                          priority: interactive
+                    EOF
+
+      - name: Setup CI SQLFluff config
+        run: |
+            cp .sqlfluff.ci .sqlfluff
+
       - name: Run pre-commit hooks
         uses: pre-commit/action@v3.0.0
 
       - name: SQL Lint
         run: |
-          sqlfluff lint models/
+            sqlfluff lint models/ --config .sqlfluff
