@@ -9,7 +9,7 @@ on:
 
 env:
   DBT_PROFILES_DIR: ~/.dbt
-  DBT_PROJECT_DIR: .
+  DBT_PROJECT_DIR: ./bank_marketing_analysis
 
 jobs:
   dbt-code-validation:
