@@ -197,3 +197,100 @@ dbt test                     # Run all tests
 dbt docs generate
 dbt docs serve
 ```
+
+## Data Preprocessing
+
+### CSV Parser
+
+The project includes a parser (`parser.py`) to transform the original bank marketing dataset (`bank-additional-full.csv`) into a format compatible with BigQuery loading. This preprocessing step is necessary because the original dataset uses semicolons (;) as delimiters and has specific formatting that needs to be standardized.
+
+#### Parser Details (`parser.py`)
+```python
+import csv
+
+def convert_bank_data(input_string):
+    """
+    Converts the bank marketing dataset from semicolon-delimited to comma-delimited format
+    and cleans up the data formatting.
+
+    Args:
+        input_string: Raw content of bank-additional-full.csv
+
+    Returns:
+        String containing the transformed CSV data
+    """
+    # Process the header and data rows
+    # Replace semicolons with commas
+    # Clean up quotation marks
+    # ...
+```
+
+### Usage Instructions
+
+1. **Download Original Dataset**
+   ```bash
+   # Download from UCI repository
+   wget https://archive.ics.uci.edu/ml/machine-learning-databases/00222/bank-additional.zip
+   unzip bank-additional.zip
+   ```
+
+2. **Run Parser**
+   ```bash
+   # Process the file
+   python parser.py
+   ```
+   This will:
+   - Read `input.txt` (your renamed bank-additional-full.csv)
+   - Convert semicolon delimiters to commas
+   - Clean up formatting
+   - Output to `output.csv`
+
+3. **Load to BigQuery**
+   ```bash
+   # Load the processed CSV to BigQuery
+   bq load \
+     --source_format=CSV \
+     --skip_leading_rows=1 \
+     your-project:bank_marketing.raw_bank_marketing \
+     output.csv
+   ```
+
+### Data Transformation
+The parser performs the following transformations:
+- Converts semicolon (;) delimiters to commas (,)
+- Removes unnecessary quotation marks
+- Cleans column names (replaces dots with underscores)
+- Ensures consistent formatting of values
+
+### Original vs. Processed Format
+
+**Original Format (bank-additional-full.csv)**:
+```
+"age";"job";"marital";"education";"default";"housing";"loan"...
+58;"management";"married";"tertiary";"no";"yes";"no"...
+```
+
+**Processed Format (output.csv)**:
+```
+age,job,marital,education,default,housing,loan...
+58,management,married,tertiary,no,yes,no...
+```
+
+### Best Practices for Data Loading
+
+1. **Before Running Parser**
+   - Backup original data file
+   - Verify file encoding (should be UTF-8)
+   - Check for any special characters
+
+2. **After Parsing**
+   - Validate output CSV format
+   - Verify column names match target schema
+   - Check sample of transformed data
+
+3. **BigQuery Loading**
+   - Use appropriate schema definitions
+   - Enable data validation
+   - Set appropriate null handling
+
+Would you like me to explain any part in more detail or add additional sections about the data preprocessing?
