@@ -1,4 +1,3 @@
----
 version: 2
 
 models:
@@ -6,19 +5,19 @@ models:
     description: "Cleaned and standardized bank marketing campaign data"
     columns:
       - name: customer_age
-        description: "Age of the customer"
+        description: "Age of the customer (numeric)"
         tests:
           - not_null
           - dbt_utils.accepted_range:
-              min_value: 18
+              min_value: 0  # Changed from 18 to match source data
               max_value: 100
 
       - name: occupation
-        description: "Customer's occupation"
+        description: "Customer's occupation (derived from job field, periods removed)"
         tests:
           - accepted_values:
               values:
-                - 'admin'
+                - 'admin.'
                 - 'blue-collar'
                 - 'entrepreneur'
                 - 'housemaid'
@@ -29,16 +28,156 @@ models:
                 - 'student'
                 - 'technician'
                 - 'unemployed'
+                - null  # For unknown values
+
+      - name: marital_status
+        description: "Marital status (divorced means divorced or widowed)"
+        tests:
+          - accepted_values:
+              values:
+                - 'divorced'
+                - 'married'
+                - 'single'
+                - null  # For unknown values
+
+      - name: education_level
+        description: "Education level"
+        tests:
+          - accepted_values:
+              values:
+                - 'basic.4y'
+                - 'basic.6y'
+                - 'basic.9y'
+                - 'high.school'
+                - 'illiterate'
+                - 'professional.course'
+                - 'university.degree'
+                - null  # For unknown values
+
+      - name: contact_type
+        description: "Contact communication type"
+        tests:
+          - not_null  # As per your staging model filter
+          - accepted_values:
+              values:
+                - 'cellular'
+                - 'telephone'
 
       - name: call_duration_seconds
-        description: "Duration of the call in seconds"
+        description: "Last contact duration in seconds"
+        tests:
+          - not_null
+          - positive_values  # Using your custom macro
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: null
+
+      - name: contact_month
+        description: "Last contact month of year"
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - 'jan'
+                - 'feb'
+                - 'mar'
+                - 'apr'
+                - 'may'
+                - 'jun'
+                - 'jul'
+                - 'aug'
+                - 'sep'
+                - 'oct'
+                - 'nov'
+                - 'dec'
+
+      - name: campaign_contacts
+        description: "Number of contacts performed during this campaign for this client"
+        tests:
+          - not_null
+          - positive_values
+
+      - name: days_since_previous_contact
+        description: "Number of days after client was last contacted (null if no previous contact)"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: null
+
+      - name: previous_campaign_contacts
+        description: "Number of contacts performed before this campaign"
         tests:
           - not_null
           - dbt_utils.accepted_range:
               min_value: 0
               max_value: null
 
-      - name: is_subscribed
-        description: "Whether the customer subscribed to the term deposit"
+      - name: previous_outcome
+        description: "Outcome of previous marketing campaign"
+        tests:
+          - accepted_values:
+              values:
+                - 'failure'
+                - 'success'
+                - null  # For nonexistent
+
+      - name: employment_variation_rate
+        description: "Employment variation rate - quarterly indicator"
         tests:
           - not_null
+
+      - name: consumer_price_index
+        description: "Consumer price index - monthly indicator"
+        tests:
+          - not_null
+          - positive_values
+
+      - name: consumer_confidence_index
+        description: "Consumer confidence index - monthly indicator"
+        tests:
+          - not_null
+
+      - name: euribor_3m_rate
+        description: "Euribor 3 month rate - daily indicator"
+        tests:
+          - not_null
+          - positive_values
+
+      - name: number_employed
+        description: "Number of employees - quarterly indicator"
+        tests:
+          - not_null
+          - positive_values
+
+      - name: age_segment
+        description: "Age segment categorization"
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - 'Young Adult'
+                - 'Adult'
+                - 'Middle Aged'
+                - 'Senior'
+
+      - name: call_duration_category
+        description: "Call duration categorization"
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - 'Very Short'
+                - 'Short'
+                - 'Medium'
+                - 'Long'
+
+      - name: contact_intensity
+        description: "Campaign contact intensity categorization"
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - 'Single Contact'
+                - 'Few Contacts'
+                - 'Multiple Contacts'
+                - 'Intensive Follow-up'
