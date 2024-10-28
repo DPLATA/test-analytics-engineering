@@ -22,7 +22,7 @@ raw_data (source)
 - Python 3.9+
 - dbt-bigquery
 - Google Cloud Platform account with BigQuery access
-- Service account with necessary permissions
+- GCP Service account with necessary permissions
 
 ### Initial Setup
 
@@ -292,5 +292,3 @@ age,job,marital,education,default,housing,loan...
    - Use appropriate schema definitions
    - Enable data validation
    - Set appropriate null handling
-
-Would you like me to explain any part in more detail or add additional sections about the data preprocessing?
